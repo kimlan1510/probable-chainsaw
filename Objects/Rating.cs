@@ -156,6 +156,42 @@ namespace RecipeBox
       conn.Close();
     }
 
+
+    //retrieve all recipes that have the same rating score.
+    public static List<Recipe> GetRecipeWithRating(int score)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT recipes.* FROM recipes JOIN recipes_rating ON (recipes.id = recipes_rating.recipes_id) JOIN rating ON (recipes_rating.rating_id = rating.id) WHERE rating.score = @ratingScore;", conn);
+      SqlParameter RatingScoreParam = new SqlParameter("@ratingScore", score);
+
+      cmd.Parameters.Add(RatingScoreParam);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Recipe> recipes = new List<Recipe>{};
+
+      while(rdr.Read())
+      {
+        int recipesId = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string instructions = rdr.GetString(2);
+        Recipe newRecipe = new Recipe(name, instructions, recipesId);
+        recipes.Add(newRecipe);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return recipes;
+    }
+
     public void AddRatingToRecipe(Recipe newRecipe)
     {
       SqlConnection conn = DB.Connection();
@@ -191,11 +227,6 @@ namespace RecipeBox
         conn.Close();
       }
     }
-
-
-
-
-
 
 
     public static void DeleteAll()

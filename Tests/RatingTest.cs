@@ -69,6 +69,31 @@ namespace RecipeBox
     }
 
     [Fact]
+    public void Test_GetRecipes_GetRecipesThatHaveTheSameRatingScore()
+    {
+      //Arrange
+      Rating testRating1 = new Rating("I", 5);
+      testRating1.Save();
+
+      Rating testRating2 = new Rating("you", 1);
+      testRating2.Save();
+
+      Recipe testRecipe1 = new Recipe("egg", "cook it");
+      testRecipe1.Save();
+
+      Recipe testRecipe2 = new Recipe("noodle", "boil it");
+      testRecipe2.Save();
+      //Act
+      testRecipe1.AddRating(testRating1);
+      testRecipe2.AddRating(testRating2);
+
+      List<Recipe> resultRecipe = Rating.GetRecipeWithRating(1);
+      List<Recipe> testRecipe = new List<Recipe>{testRecipe2};
+      //Assert
+      Assert.Equal(testRecipe, resultRecipe);
+    }
+
+    [Fact]
     public void Delete_DeletesRatingAssociationsFromDatabase_RatingList()
     {
       //Arrange
@@ -93,7 +118,9 @@ namespace RecipeBox
 
     public void Dispose()
     {
+      Ingredient.DeleteAll();
       Rating.DeleteAll();
+      Recipe.DeleteAll();
     }
 
 
