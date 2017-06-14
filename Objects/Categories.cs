@@ -93,6 +93,26 @@ namespace RecipeBox
       }
     }
 
+    public void AddRecipe(Recipe newRecipe)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO categories_recipes (recipes_id, categories_id) VALUES (@RecipeId, @CategoriesId);", conn);
+
+      SqlParameter recipeIdParameter = new SqlParameter("@RecipeId", newRecipe.GetId());
+      SqlParameter categoriesIdParameter = new SqlParameter( "@CategoriesId", this.GetId());
+
+      cmd.Parameters.Add(recipeIdParameter);
+      cmd.Parameters.Add(categoriesIdParameter);
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+
     public static Categories Find(int id)
     {
       SqlConnection conn = DB.Connection();
@@ -141,6 +161,40 @@ namespace RecipeBox
       this._name = name;
       cmd.ExecuteNonQuery();
       conn.Close();
+    }
+
+    public List<Recipe> GetRecipe()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT recipes.* FROM categories JOIN categories_recipes ON (categories.id = categories_recipes.categories_id) JOIN recipes ON (categories_recipes.recipes_id = recipes.id) WHERE categories.id = @categoriesId;", conn);
+      SqlParameter CategoriesIdParam = new SqlParameter("@categoriesId", this.GetId().ToString());
+
+      cmd.Parameters.Add(CategoriesIdParam);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Recipe> recipes = new List<Recipe>{};
+
+      while(rdr.Read())
+      {
+        int recipeId = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string instructions = rdr.GetString(2);
+        Recipe newRecipe = new Recipe(name, instructions, recipeId);
+        recipes.Add(newRecipe);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return recipes;
     }
 
     public void Delete()

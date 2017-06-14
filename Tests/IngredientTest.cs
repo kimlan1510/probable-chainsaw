@@ -90,16 +90,9 @@ namespace RecipeBox
       Assert.Equal(testRecipeIngredient, resultRecipeIngredient);
     }
 
-
-
-
     public void Dispose()
     {
       Ingredient.DeleteAll();
-
-
     }
-
-
   }
 }

@@ -111,7 +111,6 @@ namespace RecipeBox
       {
         foundId = rdr.GetInt32(0);
         name = rdr.GetString(1);
-
       }
         Ingredient foundIngredient = new Ingredient(name, foundId);
       if (rdr != null)
@@ -193,11 +192,6 @@ namespace RecipeBox
         conn.Close();
       }
     }
-
-
-
-
-
 
     public static void DeleteAll()
     {

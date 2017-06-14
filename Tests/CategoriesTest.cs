@@ -69,6 +69,29 @@ namespace RecipeBox
     }
 
     [Fact]
+    public void Test_GetRecipe_GetRecipesThatIsInTheSameCategory()
+    {
+      //Arrange
+      Recipe testRecipe1 = new Recipe("egg", "cook it");
+      testRecipe1.Save();
+
+      Recipe testRecipe2 = new Recipe("noodle", "boil it");
+      testRecipe2.Save();
+
+      Categories testCategories = new Categories("italian");
+      testCategories.Save();
+
+      //Act
+      testRecipe1.AddCategories(testCategories);
+      testRecipe2.AddCategories(testCategories);
+
+      List<Recipe> resultRecipe = testCategories.GetRecipe();
+      List<Recipe> testRecipe = new List<Recipe>{testRecipe1, testRecipe2};
+      //Assert
+      Assert.Equal(testRecipe, resultRecipe);
+    }
+
+    [Fact]
     public void Delete_DeletesCategoriesAssociationsFromDatabase_CategoriesList()
     {
       //Arrange
@@ -79,7 +102,7 @@ namespace RecipeBox
       testCategories.Save();
 
       //Act
-      testRecipe.AddCategories(testCategories);
+      testCategories.AddRecipe(testRecipe);
       testCategories.Delete();
 
       List<Categories> resultRecipeCategories = testRecipe.GetCategories();
