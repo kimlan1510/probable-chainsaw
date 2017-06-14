@@ -39,6 +39,35 @@ namespace RecipeBox
      Assert.Equal(testList, result);
     }
 
+    [Fact]
+    public void Test_Find_FindRatingInDatabase()
+    {
+      //Arrange
+      Rating testRating = new Rating("Expandrew", 2);
+      testRating.Save();
+
+      //Act
+      Rating foundRating = Rating.Find(testRating.GetId());
+
+      //Assert
+      Assert.Equal(testRating, foundRating);
+    }
+
+    [Fact]
+    public void Test_Update_UpdatesRatingInDatabase()
+    {
+      //Arrange
+      Rating testRating = new Rating("jordan", 1);
+      testRating.Save();
+      int newScore = 2;
+      //Act
+      testRating.Update("jordan", 2);
+      int result =testRating.GetScore();
+
+      //Assert
+      Assert.Equal(newScore, result);
+    }
+
 
 
     public void Dispose()
