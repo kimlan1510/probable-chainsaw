@@ -167,7 +167,7 @@ namespace RecipeBox
       return ingredients;
     }
 
-    public void AddRecipe(Recipe newRecipe)
+    public void AddIngredient(Ingredient newIngredient)
    {
      SqlConnection conn = DB.Connection();
      conn.Open();
@@ -175,7 +175,7 @@ namespace RecipeBox
      SqlCommand cmd = new SqlCommand("INSERT INTO recipes_ingredients (recipes_id, ingredients_id) VALUES (@RecipeId, @IngredientId);", conn);
 
      SqlParameter recipeIdParameter = new SqlParameter("@RecipeId", this.GetId());
-     SqlParameter ingredientIdParameter = new SqlParameter( "@IngredientId", newRecipe.GetId());
+     SqlParameter ingredientIdParameter = new SqlParameter( "@IngredientId", newIngredient.GetId());
 
      cmd.Parameters.Add(recipeIdParameter);
      cmd.Parameters.Add(ingredientIdParameter);
@@ -205,6 +205,23 @@ namespace RecipeBox
     this._instructions = instructions;
     cmd.ExecuteNonQuery();
     conn.Close();
+    }
+
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM recipes WHERE id = @recipeId; DELETE FROM recipes_ingredients WHERE recipes_id = @recipeId;", conn);
+      SqlParameter recipeIdParameter = new SqlParameter("@recipeId", this.GetId());
+
+      cmd.Parameters.Add(recipeIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+       conn.Close();
+      }
     }
 
     public static void DeleteAll()
