@@ -68,6 +68,27 @@ namespace RecipeBox
       Assert.Equal(newCategories, result);
     }
 
+    [Fact]
+    public void Delete_DeletesCategoriesAssociationsFromDatabase_CategoriesList()
+    {
+      //Arrange
+      Recipe testRecipe = new Recipe("cheesy sandwich", "cheese");
+      testRecipe.Save();
+
+      Categories testCategories = new Categories("meditarian");
+      testCategories.Save();
+
+      //Act
+      testRecipe.AddCategories(testCategories);
+      testCategories.Delete();
+
+      List<Categories> resultRecipeCategories = testRecipe.GetCategories();
+      List<Categories> testRecipeCategories = new List<Categories> {};
+
+      //Assert
+      Assert.Equal(testRecipeCategories, resultRecipeCategories);
+    }
+
     public void Dispose()
     {
       Categories.DeleteAll();

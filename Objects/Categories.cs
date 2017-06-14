@@ -143,6 +143,22 @@ namespace RecipeBox
       conn.Close();
     }
 
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM categories WHERE id = @categoryId; DELETE FROM categories_recipes WHERE categories_id = @categoryId;", conn);
+      SqlParameter categoryIdParameter = new SqlParameter("@categoryId", this.GetId());
+
+      cmd.Parameters.Add(categoryIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public static void DeleteAll()
     {

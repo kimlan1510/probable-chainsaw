@@ -167,6 +167,39 @@ namespace RecipeBox
       return ingredients;
     }
 
+    public List<Categories> GetCategories()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT categories.* FROM recipes JOIN categories_recipes ON (recipes.id = categories_recipes.recipes_id) JOIN categories ON (categories_recipes.categories_id = categories.id) WHERE categories.id = @categoriesId;", conn);
+      SqlParameter CategoriesIdParam = new SqlParameter("@categoriesId", this.GetId().ToString());
+
+      cmd.Parameters.Add(CategoriesIdParam);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Categories> categories = new List<Categories>{};
+
+      while(rdr.Read())
+      {
+        int categoriesId = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        Categories newCategories = new Categories(name, categoriesId);
+        categories.Add(newCategories);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return categories;
+    }
+
     public List<Rating> GetRating()
     {
       SqlConnection conn = DB.Connection();
@@ -220,8 +253,24 @@ namespace RecipeBox
       }
     }
 
+    public void AddCategories(Categories newCategories)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
 
+      SqlCommand cmd = new SqlCommand("INSERT INTO categories_recipes (recipes_id, categories_id) VALUES (@RecipeId, @CategoriesId);", conn);
 
+      SqlParameter recipeIdParameter = new SqlParameter("@RecipeId", this.GetId());
+      SqlParameter categoriesIdParameter = new SqlParameter( "@CategoriesId", newCategories.GetId());
+
+      cmd.Parameters.Add(recipeIdParameter);
+      cmd.Parameters.Add(categoriesIdParameter);
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public void AddIngredient(Ingredient newIngredient)
     {
