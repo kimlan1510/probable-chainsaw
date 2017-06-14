@@ -51,6 +51,32 @@ namespace RecipeBox
     }
 
     [Fact]
+    public void Test_AverageScore_GetAverageRatingScore()
+    {
+      //Arrange
+      Recipe testRecipe = new Recipe("honey biscuit", "eat");
+      testRecipe.Save();
+
+      Rating testRating1 = new Rating("I", 5);
+      testRating1.Save();
+      testRecipe.AddRating(testRating1);
+
+      Rating testRating2 = new Rating("you", 4);
+      testRating2.Save();
+      testRecipe.AddRating(testRating2);
+
+      Rating testRating3 = new Rating("you", 7);
+      testRating3.Save();
+      testRecipe.AddRating(testRating3);
+
+      //Act
+      double test = testRecipe.GetAverageScore();
+
+      //Assert
+      Assert.Equal(5.3, test);
+    }
+
+    [Fact]
     public void Test_Update_UpdatesRecipeInDatabase()
     {
       //Arrange
@@ -119,6 +145,7 @@ namespace RecipeBox
       Ingredient.DeleteAll();
       Rating.DeleteAll();
       Recipe.DeleteAll();
+      Categories.DeleteAll();
     }
   }
 }

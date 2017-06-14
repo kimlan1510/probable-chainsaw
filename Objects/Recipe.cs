@@ -134,6 +134,48 @@ namespace RecipeBox
      return foundRecipe;
     }
 
+    public double GetAverageScore()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT rating.score FROM recipes JOIN recipes_rating ON (recipes.id = recipes_rating.recipes_id) JOIN rating ON (recipes_rating.rating_id = rating.id) WHERE recipes.id = @recipesId;", conn);
+      SqlParameter RecipeIdParam = new SqlParameter("@recipesId", this.GetId().ToString());
+
+      cmd.Parameters.Add(RecipeIdParam);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<int> scores = new List<int>{};
+
+      int sum_score = 0;
+      while(rdr.Read())
+      {
+        int score = rdr.GetInt32(0);
+        scores.Add(score);
+      }
+
+      foreach(int score in scores)
+      {
+        sum_score += score;
+      }
+      double average_score = (double)sum_score / scores.Count;
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return Math.Round(average_score, 1);
+    }
+
+
+
+
+
+
     public List<Ingredient> GetIngredient()
     {
       SqlConnection conn = DB.Connection();
