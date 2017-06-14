@@ -93,6 +93,9 @@ namespace RecipeBox
     public void Delete_DeletesRecipeAssociationsFromDatabase_RecipeList()
     {
       //Arrange
+      Rating testRating = new Rating("I", 3);
+      testRating.Save();
+
       Ingredient testIngredient = new Ingredient("cheese");
       testIngredient.Save();
 
@@ -101,6 +104,7 @@ namespace RecipeBox
 
       //Act
       testRecipe.AddIngredient(testIngredient);
+      testRecipe.AddRating(testRating);
       testRecipe.Delete();
 
       List<Recipe> resultIngredientRecipe = testIngredient.GetRecipe();
@@ -113,6 +117,7 @@ namespace RecipeBox
     public void Dispose()
     {
       Ingredient.DeleteAll();
+      Rating.DeleteAll();
       Recipe.DeleteAll();
     }
   }

@@ -68,6 +68,27 @@ namespace RecipeBox
       Assert.Equal(newScore, result);
     }
 
+    [Fact]
+    public void Delete_DeletesRatingAssociationsFromDatabase_RatingList()
+    {
+      //Arrange
+      Recipe testRecipe = new Recipe("cheesy sandwich", "cheese");
+      testRecipe.Save();
+
+      Rating testRating = new Rating("kl", 1);
+      testRating.Save();
+
+      //Act
+      testRating.AddRatingToRecipe(testRecipe);
+      testRating.Delete();
+
+      List<Rating> resultRecipeRating = testRecipe.GetRating();
+      List<Rating> testRecipeRating = new List<Rating> {};
+
+      //Assert
+      Assert.Equal(testRecipeRating, resultRecipeRating);
+    }
+
 
 
     public void Dispose()

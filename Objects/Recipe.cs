@@ -201,24 +201,46 @@ namespace RecipeBox
       return rating;
     }
 
+    public void AddRating(Rating newRating)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO recipes_rating (recipes_id, rating_id) VALUES (@RecipeId, @RatingId);", conn);
+
+      SqlParameter ratingIdParameter = new SqlParameter("@RatingId", newRating.GetId());
+      SqlParameter recipeIdParameter = new SqlParameter( "@RecipeId", this.GetId());
+
+      cmd.Parameters.Add(recipeIdParameter);
+      cmd.Parameters.Add(ratingIdParameter);
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+
+
+
     public void AddIngredient(Ingredient newIngredient)
-   {
-     SqlConnection conn = DB.Connection();
-     conn.Open();
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
 
-     SqlCommand cmd = new SqlCommand("INSERT INTO recipes_ingredients (recipes_id, ingredients_id) VALUES (@RecipeId, @IngredientId);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO recipes_ingredients (recipes_id, ingredients_id) VALUES (@RecipeId, @IngredientId);", conn);
 
-     SqlParameter recipeIdParameter = new SqlParameter("@RecipeId", this.GetId());
-     SqlParameter ingredientIdParameter = new SqlParameter( "@IngredientId", newIngredient.GetId());
+      SqlParameter recipeIdParameter = new SqlParameter("@RecipeId", this.GetId());
+      SqlParameter ingredientIdParameter = new SqlParameter( "@IngredientId", newIngredient.GetId());
 
-     cmd.Parameters.Add(recipeIdParameter);
-     cmd.Parameters.Add(ingredientIdParameter);
-     cmd.ExecuteNonQuery();
-     if (conn != null)
-     {
-       conn.Close();
-     }
-   }
+      cmd.Parameters.Add(recipeIdParameter);
+      cmd.Parameters.Add(ingredientIdParameter);
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public void Update(string name, string instructions)
     {
@@ -246,7 +268,7 @@ namespace RecipeBox
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("DELETE FROM recipes WHERE id = @recipeId; DELETE FROM recipes_ingredients WHERE recipes_id = @recipeId;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM recipes WHERE id = @recipeId; DELETE FROM recipes_ingredients WHERE recipes_id = @recipeId; DELETE FROM recipes_rating where recipes_id = @recipeId", conn);
       SqlParameter recipeIdParameter = new SqlParameter("@recipeId", this.GetId());
 
       cmd.Parameters.Add(recipeIdParameter);
