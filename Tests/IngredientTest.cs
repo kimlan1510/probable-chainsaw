@@ -7,9 +7,9 @@ using System.Data.SqlClient;
 namespace RecipeBox
 {
   [Collection("RecipeBox")]
-  public class IngredientTEst : IDisposable
+  public class IngredientTest : IDisposable
   {
-    public IngredientTEst()
+    public IngredientTest()
     {
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb; Initial Catalog=recipe_box_test; Integrated Security=SSPI;";
     }
