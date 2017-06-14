@@ -143,6 +143,59 @@ namespace RecipeBox
       conn.Close();
     }
 
+    public List<Recipe> GetRecipe()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT recipes.* FROM ingredients JOIN recipes_ingredients ON (ingredients.id = recipes_ingredients.ingredients_id) JOIN recipes ON (recipes_ingredients.recipes_id = recipes.id) WHERE ingredients.id = @IngredientId;", conn);
+      SqlParameter IngredientIdParam = new SqlParameter();
+      IngredientIdParam.ParameterName = "@IngredientId";
+      IngredientIdParam.Value = this.GetId().ToString();
+
+      cmd.Parameters.Add(IngredientIdParam);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Recipe> recipes = new List<Recipe>{};
+
+      while(rdr.Read())
+      {
+        int recipeId = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string instruction = rdr.GetString(2);
+
+        Recipe newRecipe = new Recipe(name, instruction, recipeId);
+        recipes.Add(newRecipe);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return recipes;
+    }
+
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM ingredients WHERE id = @ingredientId; DELETE FROM recipes_ingredients WHERE ingredients_id = @ingredientId;", conn);
+      SqlParameter ingredientIdParameter = new SqlParameter("@ingredientId", this.GetId());
+
+      cmd.Parameters.Add(ingredientIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+
+
 
 
 
