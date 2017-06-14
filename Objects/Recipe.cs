@@ -167,6 +167,40 @@ namespace RecipeBox
       return ingredients;
     }
 
+    public List<Rating> GetRating()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT rating.* FROM recipes JOIN recipes_rating ON (recipes.id = recipes_rating.recipes_id) JOIN rating ON (recipes_rating.rating_id = rating.id) WHERE recipes.id = @recipesId;", conn);
+      SqlParameter RecipeIdParam = new SqlParameter("@recipesId", this.GetId().ToString());
+
+      cmd.Parameters.Add(RecipeIdParam);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Rating> rating = new List<Rating>{};
+
+      while(rdr.Read())
+      {
+        int ratingId = rdr.GetInt32(0);
+        string user_name = rdr.GetString(1);
+        int score = rdr.GetInt32(2);
+        Rating newRating = new Rating(user_name, score, ratingId);
+        rating.Add(newRating);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return rating;
+    }
+
     public void AddIngredient(Ingredient newIngredient)
    {
      SqlConnection conn = DB.Connection();

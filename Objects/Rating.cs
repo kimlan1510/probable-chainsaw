@@ -156,6 +156,48 @@ namespace RecipeBox
       conn.Close();
     }
 
+    public void AddRatingToRecipe(Recipe newRecipe)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO recipes_rating (recipes_id, rating_id) VALUES (@RecipeId, @RatingId);", conn);
+
+      SqlParameter ratingIdParameter = new SqlParameter("@RatingId", this.GetId());
+      SqlParameter recipeIdParameter = new SqlParameter( "@RecipeId", newRecipe.GetId());
+
+      cmd.Parameters.Add(recipeIdParameter);
+      cmd.Parameters.Add(ratingIdParameter);
+      cmd.ExecuteNonQuery();
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM rating WHERE id = @ratingId; DELETE FROM recipes_rating WHERE rating_id = @ratingId;", conn);
+      SqlParameter ratingIdParameter = new SqlParameter("@ratingId", this.GetId());
+
+      cmd.Parameters.Add(ratingIdParameter);
+      cmd.ExecuteNonQuery();
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+
+
+
+
+
+
     public static void DeleteAll()
     {
      SqlConnection conn = DB.Connection();
