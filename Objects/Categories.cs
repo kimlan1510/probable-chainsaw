@@ -93,6 +93,57 @@ namespace RecipeBox
       }
     }
 
+    public static Categories Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM categories WHERE id = @id;", conn);
+      SqlParameter idParameter = new SqlParameter("@id", id.ToString());
+
+      cmd.Parameters.Add(idParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundId = 0;
+      string name = null;
+
+      while(rdr.Read())
+      {
+        foundId = rdr.GetInt32(0);
+        name = rdr.GetString(1);
+
+      }
+        Categories foundCategories = new Categories(name, foundId);
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundCategories;
+    }
+
+    public void Update(string name)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE categories SET name = @name WHERE id = @Id;", conn);
+
+      SqlParameter namePara = new SqlParameter("@name", name);
+      SqlParameter idPara = new SqlParameter("@Id", this.GetId());
+
+      cmd.Parameters.Add(namePara);
+      cmd.Parameters.Add(idPara);
+
+      this._name = name;
+      cmd.ExecuteNonQuery();
+      conn.Close();
+    }
+
+
     public static void DeleteAll()
     {
      SqlConnection conn = DB.Connection();

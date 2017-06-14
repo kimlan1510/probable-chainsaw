@@ -39,6 +39,35 @@ namespace RecipeBox
      Assert.Equal(testList, result);
     }
 
+    [Fact]
+    public void Test_Find_FindCategoriesInDatabase()
+    {
+      //Arrange
+      Categories testCategories = new Categories("italian");
+      testCategories.Save();
+
+      //Act
+      Categories foundCategories = Categories.Find(testCategories.GetId());
+
+      //Assert
+      Assert.Equal(testCategories, foundCategories);
+    }
+
+    [Fact]
+    public void Test_Update_UpdatesCategoriesInDatabase()
+    {
+      //Arrange
+      Categories testCategories = new Categories("italian");
+      testCategories.Save();
+      string newCategories = "meditarian";
+      //Act
+      testCategories.Update("meditarian");
+      string result =testCategories.GetName();
+
+      //Assert
+      Assert.Equal(newCategories, result);
+    }
+
     public void Dispose()
     {
       Categories.DeleteAll();
