@@ -93,6 +93,56 @@ namespace RecipeBox
       }
     }
 
+    public static Ingredient Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM ingredients WHERE id = @id;", conn);
+      SqlParameter idParameter = new SqlParameter("@id", id.ToString());
+
+      cmd.Parameters.Add(idParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundId = 0;
+      string name = null;
+
+      while(rdr.Read())
+      {
+        foundId = rdr.GetInt32(0);
+        name = rdr.GetString(1);
+
+      }
+        Ingredient foundIngredient = new Ingredient(name, foundId);
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return foundIngredient;
+    }
+
+    public void Update(string name)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE ingredients SET name = @name WHERE id = @Id;", conn);
+
+      SqlParameter namePara = new SqlParameter("@name", name);
+      SqlParameter idPara = new SqlParameter("@Id", this.GetId());
+
+      cmd.Parameters.Add(namePara);
+      cmd.Parameters.Add(idPara);
+
+      this._name = name;
+      cmd.ExecuteNonQuery();
+      conn.Close();
+    }
+
 
 
 

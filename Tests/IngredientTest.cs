@@ -40,6 +40,35 @@ namespace RecipeBox
      Assert.Equal(testList, result);
     }
 
+    [Fact]
+    public void Test_Find_FindIngredientInDatabase()
+    {
+      //Arrange
+      Ingredient testIngredient = new Ingredient("Expandrew");
+      testIngredient.Save();
+
+      //Act
+      Ingredient foundIngredient = Ingredient.Find(testIngredient.GetId());
+
+      //Assert
+      Assert.Equal(testIngredient, foundIngredient);
+    }
+
+    [Fact]
+    public void Test_Update_UpdatesIngredientInDatabase()
+    {
+      //Arrange
+      Ingredient testIngredient = new Ingredient("garlic");
+      testIngredient.Save();
+      string newIngredient = "tomato";
+      //Act
+      testIngredient.Update("tomato");
+      string result =testIngredient.GetName();
+
+      //Assert
+      Assert.Equal(newIngredient, result);
+    }
+
 
     public void Dispose()
     {
