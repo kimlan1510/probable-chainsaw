@@ -1,0 +1,20 @@
+<h1>These are all the recipe that use @Model["ingredient"].GetName()</h1>
+@if(@Model["recipes"].Count != 0)
+{
+  @foreach(var recipe in Model["recipes"])
+  {
+    <li><a href="/recipes/@recipe.GetId()">@recipe.GetName()</a></li>
+  }
+}
+else
+{
+  <p>
+    there is no recipes using this ingredient yet!
+  </p>
+}
+<p>
+  <a href="/recipes/new">Add a new recipe</a>
+</p>
+<p>
+  <a href="/">return home</a>
+</p>

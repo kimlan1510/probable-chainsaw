@@ -1,1 +1,36 @@
+<h1>This recipe appears in the following categories</h1>
+@if (@Model["recipeCategory"].Count != 0)
+{
+  @foreach(var category in Model["recipeCategory"])
+  {
+    <li><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+  }
+}
 <h1>@Model["selectedRecipe"].GetName()</h1>
+<p>You will need these ingredients for the following recipe:</p>
+<ul>
+  @foreach(var ingredient in Model["recipeIngredients"])
+  {
+    <li>@ingredient.GetName()</li>
+  }
+</ul>
+<p>Follow these instructions and enjoy!</p>
+<p>@Model["selectedRecipe"].GetInstructions()</p>
+
+<form action="/@Model["selectedRecipe"].GetId()" method="post">
+  <label for="category">Add this recipe to a category</label>
+  <select name="category">
+    @foreach (var category in Model["AllCategories"])
+    {
+      <option value="@category.GetId()">@category.GetName()</option>
+    }
+  </select>
+  <button type="submit" name="button">Add to Category</button>
+</form>
+
+<p>
+  <a href="/recipes/new">Add recipe</a>
+</p>
+<p>
+  <a href="/">Return Home</a>
+</p>

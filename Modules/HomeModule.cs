@@ -40,13 +40,31 @@ namespace RecipeBox
         Dictionary<string, object> model = new Dictionary<string, object>();
         var selectedRecipe = Recipe.Find(parameters.id);
         var recipeIngredients = selectedRecipe.GetIngredient();
-        var recipeCategory = Recipe.GetCategories();
+        var recipeCategory = selectedRecipe.GetCategories();
+        var AllCategories = Categories.GetAll();
         model.Add("recipeIngredients", recipeIngredients);
         model.Add("recipeCategory", recipeCategory);
         model.Add("selectedRecipe", selectedRecipe);
+        model.Add("AllCategories", AllCategories);
         return View["recipe.cshtml", model];
       };
 
+      Post["/{id}"] = parameters => {
+        string categoryId = Request.Form["category"];
+        Categories foundCategory = Categories.Find(int.Parse(categoryId));
+        Recipe foundRecipe = Recipe.Find(parameters.id);
+        foundCategory.AddRecipe(foundRecipe);
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        var selectedRecipe = Recipe.Find(parameters.id);
+        var recipeIngredients = selectedRecipe.GetIngredient();
+        var recipeCategory = selectedRecipe.GetCategories();
+        var AllCategories = Categories.GetAll();
+        model.Add("recipeIngredients", recipeIngredients);
+        model.Add("recipeCategory", recipeCategory);
+        model.Add("selectedRecipe", selectedRecipe);
+        model.Add("AllCategories", AllCategories);
+        return View["recipe.cshtml", model];
+       };
 
       Get["/recipes/new"] = _ => {
         Dictionary<string, object> model = new Dictionary<string, object>();
@@ -72,6 +90,20 @@ namespace RecipeBox
         foundCategory.AddRecipe(newRecipe);
         return View["recipes.cshtml", AllRecipes];
       };
+      Get["/ingredients"] = _ => {
+        List<Ingredient> AllIngredients = Ingredient.GetAll();
+        return View["ingredients.cshtml", AllIngredients];
+      };
+      Get["/ingredients/{id}"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        Ingredient foundIngredient = Ingredient.Find(parameters.id);
+        List<Recipe> recipesIngredient = foundIngredient.GetRecipe();
+        model.Add("ingredient", foundIngredient);
+        model.Add("recipes", recipesIngredient);
+        return View["recipes_ingredient.cshtml", model];
+      };
+
+
       Get["/ingredients/new"] = _ => {
         return View ["ingredient_form.cshtml"];
       };
@@ -82,6 +114,21 @@ namespace RecipeBox
         return View ["recipes.cshtml", AllRecipes];
       };
 
+      Post["/categories/clear"] = _ => {
+        Categories.DeleteAll();
+        List<Categories> AllCategories = Categories.GetAll();
+        return View["index.cshtml", AllCategories];
+      };
+      Post["/recipes/clear"] = _ => {
+        Recipe.DeleteAll();
+        List<Recipe> AllRecipe = Recipe.GetAll();
+        return View["recipes.cshtml", AllRecipe];
+      };
+      Post["/ingredients/clear"] = _ => {
+        Ingredient.DeleteAll();
+        List<Ingredient> AllIngredient = Ingredient.GetAll();
+        return View["ingredients.cshtml", AllIngredient];
+      };
 
     }
   }

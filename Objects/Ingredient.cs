@@ -197,7 +197,7 @@ namespace RecipeBox
     {
      SqlConnection conn = DB.Connection();
      conn.Open();
-     SqlCommand cmd = new SqlCommand("DELETE FROM ingredients;", conn);
+     SqlCommand cmd = new SqlCommand("DELETE FROM ingredients; DELETE FROM recipes_ingredients", conn);
      cmd.ExecuteNonQuery();
      conn.Close();
     }

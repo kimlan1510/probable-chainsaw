@@ -214,10 +214,10 @@ namespace RecipeBox
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT categories.* FROM recipes JOIN categories_recipes ON (recipes.id = categories_recipes.recipes_id) JOIN categories ON (categories_recipes.categories_id = categories.id) WHERE categories.id = @categoriesId;", conn);
-      SqlParameter CategoriesIdParam = new SqlParameter("@categoriesId", this.GetId().ToString());
+      SqlCommand cmd = new SqlCommand("SELECT categories.* FROM recipes JOIN categories_recipes ON (recipes.id = categories_recipes.recipes_id) JOIN categories ON (categories_recipes.categories_id = categories.id) WHERE recipes.id = @recipeId;", conn);
+      SqlParameter RecipeIdParam = new SqlParameter("@recipeId", this.GetId().ToString());
 
-      cmd.Parameters.Add(CategoriesIdParam);
+      cmd.Parameters.Add(RecipeIdParam);
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -375,7 +375,7 @@ namespace RecipeBox
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM recipes;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM recipes; DELETE FROM recipes_ingredients", conn);
       cmd.ExecuteNonQuery();
       conn.Close();
     }

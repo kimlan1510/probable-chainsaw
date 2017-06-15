@@ -116,6 +116,26 @@ namespace RecipeBox
     }
 
     [Fact]
+    public void Test_GetCategories_GetCategoriesFromRecipe()
+    {
+      //Arrange
+      Recipe testRecipe = new Recipe("cheesy grits", "eat them up");
+      testRecipe.Save();
+
+      Categories testCategory = new Categories("baby food");
+      testCategory.Save();
+
+      //Act
+      testCategory.AddRecipe(testRecipe);
+      var test = testRecipe.GetCategories();
+      List<Categories> result = new List<Categories>{testCategory};
+
+      //Assert
+      Assert.Equal(test, result);
+
+    }
+
+    [Fact]
     public void Delete_DeletesRecipeAssociationsFromDatabase_RecipeList()
     {
       //Arrange
