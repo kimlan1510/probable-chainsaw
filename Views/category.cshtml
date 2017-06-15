@@ -1,0 +1,16 @@
+<h1>All @Model["selectedCategory"].GetName() recipes</h1>
+@if(@Model["allRecipes"].Count != 0)
+{
+  @foreach(var recipe in Model["allRecipes"])
+  {
+    <li><a href="/recipes/@recipe.GetId()">@recipe.GetName()</a></li>
+  }
+}
+else
+{
+  <p>
+    There are no recipes in this category yet!
+  </p>
+}
+<p><a href="/recipes/new">Add a Recipe</a></p>
+<p><a href="/">Return Home</a></p>
